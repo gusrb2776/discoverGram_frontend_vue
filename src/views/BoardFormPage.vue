@@ -1,19 +1,19 @@
 <template>
-  <PostCard :post="postData" />
+  <BoardComponent :post="postData" />
 </template>
 
 <script setup>
-import PostCard from '@/components/BoardComponent_test.vue'
+import BoardComponent from '@/components/BoardComponent.vue'
 
 const postData = {
-  memberProfileUrl: '/img/profile.jpg',
+  memberProfileUrl: '/img/a.jpg',
   memberName: '닉네임',
   placeName: '위치',
   content: '글내용입니다.',
   images: [
-      '/img/image1.jpg',
-      '/img/image2.jpg',
-      '/img/image3.jpg'
+      '/img/nongdamgom.jpg',
+      '/img/nongdamgom2.jpg',
+      '/img/nongdamgom.jpg'
   ],
   likes: ['사용자1', '사용자2', '사용자3'],
   comments: [

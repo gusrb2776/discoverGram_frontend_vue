@@ -71,9 +71,9 @@
 <style scoped>
     /* @import "@/assets/navbar.css"; */
 .navbar {
-background-color: white;
-border-bottom: 1px solid #dbdbdb;
-padding: 8px 0;
+    background-color: white;
+    border-bottom: 1px solid #dbdbdb;
+    padding: 8px 0;
 }
 
 .container {

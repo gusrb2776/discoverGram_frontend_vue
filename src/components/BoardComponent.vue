@@ -2,14 +2,16 @@
     <div>
         <div class="post-card">
             <div class="post-header">
-            <img class="profile-pic" src="/img/a.jpg" alt="Profile Picture">
-            <div class="user-info">
-                <span class="username">닉네임</span>
-                <span class="location">위치</span>
+                <img class="profile-pic" :src="post.memberProfileUrl" :alt="post.memberName">
+                <div class="user-info">
+                    <span class="username">{{ post.memberName }}</span>
+                    <span class="location">{{ post.placeName }}</span>
+                </div>
             </div>
-            </div>
-            <div class="post-image">
-                <img src="/img/nongdamgom.jpg" alt="Post Image">
+
+
+            <div class="post-images">
+                <carousel :images="post.images"/>
             </div>
             <div class="post-actions">
                 <button><i class="far fa-heart"></i></button>
@@ -17,20 +19,14 @@
                 <button><i class="far fa-paper-plane"></i></button>
             </div>
             <div class="post-content">
-                글내용입니다.
+                {{ post.content }}
             </div>
             <div class="post-likes">
-                <span>Liked by <strong>사용자이름</strong> and <strong>사용자이름2 others</strong></span>
-            </div>
-            <div class="post-caption">
-                <span class="username">댓글1</span> This is a sample caption for the post.
+                <span>Liked by <span v-for="member in post.likes" :key="member">{{ member }}</span></span>
             </div>
             <div class="post-comments">
-                <div class="comment">
-                    <span class="username">댓글2</span> Nice post!
-                </div>
-                <div class="comment">
-                    <span class="username">댓글3</span> Awesome!
+                <div class="comment" v-for="comment in post.comments" :key="comment.id">
+                    <span class="username">{{ comment.name }}</span> {{ comment.content }}
                 </div>
             </div>
             <div class="post-input">
@@ -40,7 +36,17 @@
     </div>
 </template>
 
+<script setup>
+    import { defineProps } from 'vue'
+    import Carousel from '@/components/BoardImageCarousel.vue'; // 캐러셀 컴포넌트 임포트
+
+    const props = defineProps({
+        post: Object
+    })
+</script>
+
 <style scoped>
     @import "@/assets/common.css";
-
+    
+    
 </style>
