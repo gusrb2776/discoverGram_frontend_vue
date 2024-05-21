@@ -1,4 +1,4 @@
-import BoardFormPage from '@/views/BoardFormPage.vue'
+import TestOnly from '@/views/TestOnly.vue'
 import LoginPage from '@/views/LoginPage.vue'
 import MainPage from '@/views/MainPage.vue'
 import MapPage from '@/views/MapPage.vue'
@@ -42,9 +42,9 @@ const router = createRouter({
       component: MemberPage
     },
     {
-      path: '/board',
-      name: 'board',
-      component: BoardFormPage
+      path: '/test',
+      name: 'test',
+      component: TestOnly
     },  
     {
       path: '/post/:postSeq',

@@ -3,7 +3,7 @@
         <NavBar/>
         <div class="wrapper">
             <div class="board-container">
-                <BoardComponent v-for="post in posts" :key="post.id" :post="post" class="board-item" />
+                <BoardComponent v-for="post in posts" :key="post.seq" :post="post" class="board-item" />
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
 
     const dummyData = [
         {
-            id: 1,
+            seq: 1,
             memberProfileUrl: '/img/a.jpg',
             memberName: '닉네임',
             placeName: '위치',
@@ -42,7 +42,7 @@
                 '/img/nongdamgom2.jpg',
                 '/img/nongdamgom.jpg'
             ],
-            likes: ['사용자1', '사용자2', '사용자3'],
+            likes: 31,
             comments: [
                 { id: 1, name: '댓글1', content: '좋아요!' },
                 { id: 2, name: '댓글2', content: '멋져요!' },
@@ -50,7 +50,7 @@
             ]
         },
         {
-            id: 2,
+            seq: 2,
             memberProfileUrl: '/img/a.jpg',
             memberName: '닉네임2',
             placeName: '위치',
@@ -60,7 +60,7 @@
                 '/img/nongdamgom2.jpg',
                 '/img/nongdamgom.jpg'
             ],
-            likes: ['사용자1', '사용자2', '사용자3'],
+            likes: 5,
             comments: [
                 { id: 1, name: '댓글1', content: '좋아요!' },
                 { id: 2, name: '댓글2', content: '멋져요!' },
@@ -68,7 +68,7 @@
             ]
         },
         {
-            id: 3,
+            seq: 3,
             memberProfileUrl: '/img/a.jpg',
             memberName: '닉네임3',
             placeName: '위치',
@@ -78,7 +78,7 @@
                 '/img/nongdamgom2.jpg',
                 '/img/nongdamgom.jpg'
             ],
-            likes: ['사용자1', '사용자2', '사용자3'],
+            likes: 6,
             comments: [
                 { id: 1, name: '댓글1', content: '좋아요!' },
                 { id: 2, name: '댓글2', content: '멋져요!' },

@@ -95,11 +95,16 @@
     top: 50%;
     transform: translateY(-50%);
     font-size: 24px;
-    color: #333;
+    color: whitesmoke;
     background-color: transparent;
     border: none;
     cursor: pointer;
     outline: none;
+    transition: color 0.5s ease; /* 여기에 추가 */
+  }
+
+  .carousel-control:hover{
+    color:#333;
   }
   
   .carousel-control.prev {

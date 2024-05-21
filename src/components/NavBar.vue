@@ -50,7 +50,7 @@
                 </li>
                 <!-- 테스트용 -->
                 <li>
-                    <RouterLink to="/board">
+                    <RouterLink to="/test">
                         테스트용
                     </RouterLink>
                 </li>
