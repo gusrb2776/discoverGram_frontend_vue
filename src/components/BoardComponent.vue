@@ -16,6 +16,9 @@
                 <button><i class="far fa-comment"></i></button>
                 <button><i class="far fa-paper-plane"></i></button>
             </div>
+            <div class="post-content">
+                글내용입니다.
+            </div>
             <div class="post-likes">
                 <span>Liked by <strong>사용자이름</strong> and <strong>사용자이름2 others</strong></span>
             </div>

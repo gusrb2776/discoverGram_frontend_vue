@@ -27,10 +27,13 @@
         </div>
         <hr class="divider" />
         <div class="post-list">
-          <div class="post-card" v-for="post in posts" :key="post.id">
-            <div class="post-image" style="cursor:pointer;" >
-              <img :src="post.image" :alt="post.id" />
-            </div>
+          <div class="post-card" v-for="post in posts" :key="post.seq">
+            <!-- <RouterLink to="/post"> -->
+            <RouterLink :to="{ name: 'PostPage', params: { postSeq: post.seq } }">
+              <div class="post-image" style="cursor:pointer;" >
+                <img :src="post.image" :alt="post.seq" />
+              </div>
+            </RouterLink>
           </div>
         </div>
       </div>
@@ -39,42 +42,43 @@
 </template>
 
 <script setup>
-import { createApp, ref } from 'vue'
+import { createApp, ref, defineProps  } from 'vue'
 import NavBar from '@/components/NavBar.vue'
+
 
 const posts = ref([
   {
-    id: 1,
+    seq: 1,
     date: '2023-05-10',
     image: '/img/nongdamgom2.jpg',
   },
   {
-    id: 2,
+    seq: 2,
     date: '2023-05-10',
     image: '/img/nongdamgom2.jpg',
   },
   {
-    id: 3,
+    seq: 3,
     date: '2023-05-10',
     image: '/img/nongdamgom2.jpg',
   },
   {
-    id: 3,
+    seq: 4,
     date: '2023-05-10',
     image: '/img/nongdamgom2.jpg',
   },
   {
-    id: 3,
+    seq: 5,
     date: '2023-05-10',
     image: '/img/nongdamgom2.jpg',
   },
   {
-    id: 3,
+    seq: 6,
     date: '2023-05-10',
     image: '/img/nongdamgom2.jpg',
   },
   {
-    id: 3,
+    seq: 7,
     date: '2023-05-10',
     image: '/img/nongdamgom2.jpg',
   },

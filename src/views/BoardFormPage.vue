@@ -1,12 +1,25 @@
 <template>
-    <div>
-        <NavBar/>
-        <div class="wrapper">
-            <h1>hi</h1>
-        </div>
-    </div>
+  <PostCard :post="postData" />
 </template>
 
 <script setup>
-    import NavBar from '@/components/NavBar.vue';
+import PostCard from '@/components/BoardComponent_test.vue'
+
+const postData = {
+  memberProfileUrl: '/img/profile.jpg',
+  memberName: '닉네임',
+  placeName: '위치',
+  content: '글내용입니다.',
+  images: [
+      '/img/image1.jpg',
+      '/img/image2.jpg',
+      '/img/image3.jpg'
+  ],
+  likes: ['사용자1', '사용자2', '사용자3'],
+  comments: [
+      { id: 1, name: '댓글1', content: '좋아요!' },
+      { id: 2, name: '댓글2', content: '멋져요!' },
+      { id: 3, name: '댓글3', content: '인생샷!' }
+  ]
+}
 </script>

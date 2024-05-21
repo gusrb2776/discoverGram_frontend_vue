@@ -1,34 +1,13 @@
 <script setup>
     import { ref } from 'vue';
     import { RouterLink } from 'vue-router';
+    import { useModalStore } from '@/stores/modal'
+    import Modal from '@/components/Modal.vue';
 
-    const isModalOpen = ref(false);
-    const isImageUploaded = ref(false); // 이미지 업로드 여부를 추적하는 새로운 ref 변수
+    const modalStore = useModalStore()
 
     const toggleModal = () => {
-    isModalOpen.value = !isModalOpen.value;
-        isImageUploaded.value = false; // 모달이 열릴 때마다 초기화
-    };
-
-    const previewImage = ref(null);
-
-    const handleFileUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            previewImage.value = URL.createObjectURL(file);
-            isImageUploaded.value = true; // 이미지 업로드 시 true로 설정
-        } else {
-            previewImage.value = null;
-            isImageUploaded.value = false;
-        }
-    };
-
-    const back = () => {
-        const confirmResult = confirm("정말 지울꺼야?");
-        if(confirmResult){
-            isImageUploaded.value =false;
-            previewImage.value = null;
-        }
+    modalStore.toggleModal()
     }
 </script>
 
@@ -69,6 +48,12 @@
                         <img src="/img/a.jpg" alt="Profile Picture">
                     </RouterLink>
                 </li>
+                <!-- 테스트용 -->
+                <li>
+                    <RouterLink to="/board">
+                        테스트용
+                    </RouterLink>
+                </li>
                 <li>
                     <RouterLink to="/login">
                         login
@@ -79,47 +64,13 @@
         </div>
     </nav>
 
-    <transition name="modal-transition">
-    <div v-if="isModalOpen" class="modal">
-      <span class="close-button" @click="toggleModal">&times;</span>
-      <div class="modal-content">
-        <div class="modal-up" style="display: flex; align-items: center;">
-            <div v-if="isImageUploaded" class="header-buttons">
-                <button class="back-button" @click="back">뒤로가기</button>
-            </div>
-            <h2 class="modal-title" style="margin: 0 auto;">{{ isImageUploaded ? '편집' : '게시글 쓰기' }}</h2>
-            <div v-if="isImageUploaded" class="header-buttons">
-                <button class="next-button">다음</button>
-            </div>
-        </div>
-        <hr style="width: 100%; margin-top: 10px;">
-        <div class="modal-body">
-            <div class="img-container">
-                
-                <img v-if="isImageUploaded" :src="previewImage" alt="Uploaded Image">
-                <div v-if="isImageUploaded" class="floating-button">사진버튼입니다</div>
-                <img v-else src="/img/nongdamgom_stop_breathe.jpg" alt="">
-            </div>
-          <h3 v-if="!isImageUploaded">이미지 넣을때까지 숨참음</h3>
-          <label v-if="!isImageUploaded" class="photo-button">
-            사진 넣기
-            <input
-              type="file"
-              accept="image/*"
-              @change="handleFileUpload"
-              style="display: none"
-            />
-          </label>
-        </div>
-      </div>
-    </div>
-  </transition>
+    <Modal/>
 </template>
 
   
 <style scoped>
     /* @import "@/assets/navbar.css"; */
-    .navbar {
+.navbar {
 background-color: white;
 border-bottom: 1px solid #dbdbdb;
 padding: 8px 0;
@@ -199,128 +150,5 @@ box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 
 .nav-links li .input::placeholder {
 color: #999;
-}
-
-/* 모달 티비 */
-.modal {
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 70%;
-    height: 60%;
-    text-align: center;
-    border-radius: 20px;
-    position: relative; /* 추가 */
-    display: flex; /* 추가 */
-    flex-direction: column; /* 추가 */
-}
-
-.modal-header {
-  padding-bottom: 10px; /* 상단 바와 본문 사이의 간격 */
-  border-bottom: 1px solid #ccc; /* 선 추가 */
-}
-
-.modal-title {
-margin-top: 0;
-}
-
-.modal-body {
-    flex: 1; /* 추가 */
-    display: flex;
-    flex-direction: column; /* 수직 방향으로 정렬 */
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    overflow: hidden; /* 추가 */
-}
-
-.modal-body img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.photo-button {
-background-color: #8CBCBC;
-color: black;
-padding: 15px 30px;
-border: none;
-cursor: pointer;
-font-size: 16px;
-border-radius: 20px;
-}
-
-/* 닫기 버튼 스타일 */
-.close-button {
-color: white;
-float: right;
-font-size: 28px;
-font-weight: bold;
-position: absolute;
-top: 10px;
-right: 20px;
-cursor: pointer;
-}
-
-.close-button:hover,
-.close-button:focus {
-color: black;
-text-decoration: none;
-cursor: pointer;
-}
-
-/* 모달 트랜지션 효과 */
-.modal-transition-enter-active,
-.modal-transition-leave-active {
-transition: opacity 0.3s ease;
-}
-
-.modal-transition-enter-from,
-.modal-transition-leave-to {
-opacity: 0;
-}
-
-.back-button,
-.next-button {
-  background-color: #8CBCBC;
-  color: black;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  border-radius: 20px;
-}
-
-.image-container {
-  position: relative;
-}
-
-.floating-button {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  width: 50px;
-  height: 50px;
-  background-color: #8CBCBC;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
 }
 </style>

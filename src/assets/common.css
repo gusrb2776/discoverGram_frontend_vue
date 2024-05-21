@@ -67,7 +67,8 @@
 
 .post-likes,
 .post-caption,
-.post-comments {
+.post-comments,
+.post-content {
     padding: 0 16px;
 }
 
