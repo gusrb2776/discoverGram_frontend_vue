@@ -3,7 +3,7 @@
         <NavBar/>
         <div class="wrapper">
           <!-- 수정필요 -->
-          <BoardComponent class="board-component" :post="postData" />
+          <PostComponent class="board-component" :post="postData" />
         </div>
     </div>
   </template>
@@ -11,14 +11,16 @@
 <script setup>
   import { useRoute } from 'vue-router'
   import NavBar from '@/components/NavBar.vue'
-  import BoardComponent from '@/components/BoardComponent.vue'
+  import PostComponent from '@/components/PostComponent.vue'
 
   
   const route = useRoute()
   // {{ postSeq }} 이런식으로 쓰면 됨.
+  // 주소창에 있는 postId임.
   const postSeq = route.params.postSeq
 
   const postData = {
+        memberSeq: 1,
         memberProfileUrl: '/img/a.jpg',
         memberName: '닉네임',
         placeName: '위치',

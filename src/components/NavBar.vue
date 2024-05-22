@@ -1,13 +1,29 @@
 <script setup>
     import { ref } from 'vue';
-    import { RouterLink } from 'vue-router';
+    import { RouterLink, useRouter } from 'vue-router';
     import { useModalStore } from '@/stores/modal'
     import Modal from '@/components/Modal.vue';
+    import { useAuthStore } from '@/stores/auth'
 
     const modalStore = useModalStore()
 
     const toggleModal = () => {
-    modalStore.toggleModal()
+        modalStore.toggleModal()
+    }
+
+    //로그인 정보 참조
+    const authStore = useAuthStore()
+    const memberSeq = authStore.memberSeq;
+    const profileImgage = authStore.profileImgage;
+
+
+    //로그아웃
+    const router = useRouter();
+
+    const logout = () =>{
+        authStore.setMemberSeq(null);
+        authStore.setProfileImgage(null);
+        router.push('/login');
     }
 </script>
 
@@ -15,12 +31,12 @@
     <nav class="navbar">
         <div class="container">
         <div class="navbar-brand">
-            <RouterLink to="/main" class="logo">
+            <RouterLink to="/" class="logo">
                 <img src="/img/b.jpg" alt="Logo">
             </RouterLink>
         </div>
         <div class="brand-text">
-            <RouterLink to="/main" class="logo">
+            <RouterLink to="/" class="logo">
                 <img src="https://see.fontimg.com/api/renderfont4/51zjB/eyJyIjoiZnMiLCJoIjo2NSwidyI6MTAwMCwiZnMiOjY1LCJmZ2MiOiIjMDAwMDAwIiwiYmdjIjoiI0ZGRkZGRiIsInQiOjF9/RGlzY292ZXJHcmFt/katerlin.png" width = "200" height="35">
             </RouterLink>
         </div>
@@ -42,21 +58,22 @@
                         <i  class="fa-regular fa-square-plus"></i>
                     </div>
                 </li>
-                <!-- <li><a href="#">메시지</a></li> -->
+                <!-- 프로필 이미지 -->
                 <li>
-                    <RouterLink to="/member">
+                    <RouterLink to="/mypage">
                         <img src="/img/a.jpg" alt="Profile Picture">
                     </RouterLink>
+                </li>
+                <!-- 로그아웃 -->
+                <li>
+                    <div class="search-container text-btn" @click="logout">
+                        logout
+                    </div>
                 </li>
                 <!-- 테스트용 -->
                 <li>
                     <RouterLink to="/test">
                         테스트용
-                    </RouterLink>
-                </li>
-                <li>
-                    <RouterLink to="/login">
-                        login
                     </RouterLink>
                 </li>
             </ul>
@@ -69,86 +86,5 @@
 
   
 <style scoped>
-    /* @import "@/assets/navbar.css"; */
-.navbar {
-    background-color: white;
-    border-bottom: 1px solid #dbdbdb;
-    padding: 8px 0;
-}
-
-.container {
-display: flex;
-justify-content: space-between;
-align-items: center;
-max-width: 975px;
-margin: 0 auto;
-}
-
-.navbar-brand .logo {
-display: block;
-}
-
-.navbar-brand .logo img {
-height: 35px;
-}
-
-.nav-menu {
-display: flex;
-}
-
-.nav-links {
-display: flex;
-list-style: none;
-margin: 0;
-padding: 0;
-}
-
-.nav-links li {
-margin-left: 24px;
-}
-
-.nav-links li a {
-color: #262626;
-text-decoration: none;
-font-weight: 600;
-font-size: 16px;
-}
-
-.nav-links li a img {
-height: 24px;
-border-radius: 50%;
-}
-
-.search-container {
-position: relative;
-display: flex;
-align-items: center;
-}
-
-.search-icon {
-position: absolute;
-left: 10px;
-color: #999;
-}
-
-.nav-links li .input {
-background-color: #efefef;
-border: none;
-border-radius: 3px;
-color: #262626;
-font-size: 14px;
-font-weight: 400;
-padding: 6px 12px 6px 30px; /* 아이콘 크기 만큼 왼쪽 여백 추가 */
-width: 200px;
-}
-
-/* 기존 스타일은 유지 */
-.nav-links li .input:focus {
-outline: none;
-box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
-.nav-links li .input::placeholder {
-color: #999;
-}
+    @import "@/assets/navbar.css";
 </style>

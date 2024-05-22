@@ -8,17 +8,21 @@
             <img src="/img/a.jpg" alt="Profile Picture" />
           </div>
           <div class="profile-info">
-            <h2 class="username">이창현</h2>
+            <div class="profile-info-header">
+              <h2 class="username">이창현</h2>
+              <button v-if="!isFollow" class="follow-btn" @click="follow">팔로우</button>
+              <button v-else class="followed-btn" @click="unfollow">팔로잉</button>
+            </div>
             <div class="profile-stats">
               <div class="stat">
                 <span class="stat-count">{{postLen}}</span>
                 <span class="stat-label">게시글</span>
               </div>
-              <div class="stat">
+              <div class="stat stat-follow" @click="toggleFollowModal">
                 <span class="stat-count">101</span>
                 <span class="stat-label">팔로워</span>
               </div>
-              <div class="stat">
+              <div class="stat stat-following" @click="toggleFollowingModal">
                 <span class="stat-count">12341234</span>
                 <span class="stat-label">팔로잉</span>
               </div>
@@ -38,153 +42,136 @@
         </div>
       </div>
     </div>
+
+
+    <FollowModal v-if="showFollowModal" @close="toggleFollowModal" />
+    <FollowingModal v-if="showFollowingModal" @close="toggleFollowingModal" />
+
   </div>
 </template>
 
 <script setup>
-import { createApp, ref, defineProps  } from 'vue'
-import NavBar from '@/components/NavBar.vue'
+  import { createApp, ref, defineProps, onMounted  } from 'vue'
+  import NavBar from '@/components/NavBar.vue'
+  import { useRoute, useRouter } from 'vue-router'
+  import { useAuthStore } from '@/stores/auth'
+  import axios from 'axios';
+  import FollowModal from '@/components/FollowModal.vue';
+  import FollowingModal from '@/components/FollowingModal.vue';
 
 
-const posts = ref([
-  {
-    seq: 1,
-    date: '2023-05-10',
-    image: '/img/nongdamgom2.jpg',
-  },
-  {
-    seq: 2,
-    date: '2023-05-10',
-    image: '/img/nongdamgom2.jpg',
-  },
-  {
-    seq: 3,
-    date: '2023-05-10',
-    image: '/img/nongdamgom2.jpg',
-  },
-  {
-    seq: 4,
-    date: '2023-05-10',
-    image: '/img/nongdamgom2.jpg',
-  },
-  {
-    seq: 5,
-    date: '2023-05-10',
-    image: '/img/nongdamgom2.jpg',
-  },
-  {
-    seq: 6,
-    date: '2023-05-10',
-    image: '/img/nongdamgom2.jpg',
-  },
-  {
-    seq: 7,
-    date: '2023-05-10',
-    image: '/img/nongdamgom2.jpg',
-  },
-])
+  // 로그인 한 사용자 꺼내기
+  const authStore = useAuthStore()
+  const nowMemberSeq = authStore.memberSeq;
 
-const postLen = ref(posts.value.length);
+  const route = useRoute()
+  const router = useRouter()
+  const memberSeq = route.params.memberSeq
+
+  // 사용자가 글쓴 친구면 mypage로 가기
+  if(memberSeq == nowMemberSeq){
+    router.push("/mypage");
+  }
+
+  // memberSeq가 작성자. 나는 nowMemberSeq
+  // 이걸 follow했는지 확인을해
+  // 그결과를 v-if로 그리고 ref로
+  const isFollow = ref(false);
+
+  onMounted(async () => {
+      await checkFollow();
+  });
+
+  const checkFollow = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/${memberSeq}/${nowMemberSeq}`);
+      isFollow.value = response.isFollow;
+    } catch (error) {
+      console.error('Failed to fetch comments:', error);
+    }
+  }
+
+
+  // 팔로우 신청
+  const follow = async () => {
+    try {
+      const response = await axios.post(`http://localhost:8080/${memberSeq}/${nowMemberSeq}`);
+      console.log(response.data);
+      isFollow.value = true;
+    } catch (error) {
+      console.error(error);
+    }     
+  }
+
+  // 언팔로우
+  const unfollow = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:8080/${memberSeq}/${nowMemberSeq}`);
+      console.log(response.data);
+      isFollow.value = false;
+    } catch (error) {
+      console.error(error);
+    }     
+  }
+
+  // 팔로워 모달 띄우기
+  const showFollowModal = ref(false);
+
+  function toggleFollowModal() {
+    showFollowModal.value = !showFollowModal.value;
+  }
+
+  // 팔로잉 모달 띄우기
+  const showFollowingModal = ref(false);
+
+  function toggleFollowingModal() {
+    showFollowingModal.value = !showFollowingModal.value;
+  }
+
+  // dummy 데이터
+  const posts = ref([
+    {
+      seq: 1,
+      date: '2023-05-10',
+      image: '/img/nongdamgom2.jpg',
+    },
+    {
+      seq: 2,
+      date: '2023-05-10',
+      image: '/img/nongdamgom2.jpg',
+    },
+    {
+      seq: 3,
+      date: '2023-05-10',
+      image: '/img/nongdamgom2.jpg',
+    },
+    {
+      seq: 4,
+      date: '2023-05-10',
+      image: '/img/nongdamgom2.jpg',
+    },
+    {
+      seq: 5,
+      date: '2023-05-10',
+      image: '/img/nongdamgom2.jpg',
+    },
+    {
+      seq: 6,
+      date: '2023-05-10',
+      image: '/img/nongdamgom2.jpg',
+    },
+    {
+      seq: 7,
+      date: '2023-05-10',
+      image: '/img/nongdamgom2.jpg',
+    },
+  ])
+  const postLen = ref(posts.value.length);
+
+
+
 </script>
 
 <style scoped>
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.member-container {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  background-color: #E1E8EE;
-  box-sizing: border-box;
-}
-
-.profile {
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  border: 1px solid #dbdbdb;
-  border-radius: 4px;
-}
-
-.profile-header {
-  display: flex;
-  align-items: center;
-}
-
-.profile-image {
-  margin-right: 20px;
-}
-
-.profile-image img {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-}
-
-.profile-info {
-  flex: 1;
-}
-
-.username {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.profile-stats {
-  display: flex;
-  align-items: center;
-}
-
-.stat {
-  margin-right: 20px;
-}
-
-.stat-count {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.stat-label {
-  font-size: 14px;
-  color: #8e8e8e;
-}
-
-.divider {
-  border: none;
-  border-top: 1px solid #dbdbdb;
-}
-
-.post-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 0px 20px; /* 행 간격 10px, 열 간격 20px */
-}
-
-.post-card {
-  background-color: #fff;
-  border: 1px solid #dbdbdb;
-  border-radius: 4px;
-  overflow: hidden;
-
-  height: 250px;
-}
-
-
-.post-image {
-  width: 250px; /* 원하는 너비 */
-  height: 250px; /* 원하는 높이 */
-  overflow: hidden; /* 이미지가 div 영역을 벗어나지 않도록 */
-}
-
-.post-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* 이미지 비율 유지하면서 div 영역에 맞게 조정 */
-}
-
+    @import "@/assets/member.css";
 </style>

@@ -33,6 +33,7 @@
     const dummyData = [
         {
             seq: 1,
+            memberSeq:1,
             memberProfileUrl: '/img/a.jpg',
             memberName: '닉네임',
             placeName: '위치',
@@ -51,6 +52,7 @@
         },
         {
             seq: 2,
+            memberSeq:1,
             memberProfileUrl: '/img/a.jpg',
             memberName: '닉네임2',
             placeName: '위치',
@@ -69,6 +71,7 @@
         },
         {
             seq: 3,
+            memberSeq:1,
             memberProfileUrl: '/img/a.jpg',
             memberName: '닉네임3',
             placeName: '위치',

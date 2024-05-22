@@ -6,12 +6,11 @@
                 <div class="center">
                     <h2 class="form-title" id="login" ref="loginTitle" @click="slideForm">회원가입</h2>
                     <div class="form-holder">
-                        <input type="text" class="input" placeholder="아이디" />
-                        <input type="password" class="input" placeholder="비밀번호" />
-                        <input type="email" class="input" placeholder="이메일" />
-                        <input type="phone" class="input" placeholder="전화번호" />
+                        <input type="text" class="input" v-model="id" placeholder="아이디" />
+                        <input type="password" class="input" v-model="password" placeholder="비밀번호" />
+                        <input type="text" class="input" v-model="name" placeholder="이름" />
                     </div>
-                    <button class="submit-btn">회원가입</button>
+                    <button class="submit-btn" @click="signup">회원가입</button>
                 </div>
             </div>
         </div>
@@ -24,8 +23,10 @@
 </style>
 
 <script setup>
-    import { ref } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { RouterView } from 'vue-router';
+    import axios from 'axios';
+
 
     const loginTitle = ref(null);
 
@@ -40,7 +41,24 @@
         }
     };
 
-    const moveSignup = () => {
+    // 회원가입
 
+    const id = ref('')
+    const password = ref('')
+    const name = ref('')
+
+    const signup = async() => {
+        try {
+            const response = await axios.post('http://localhost:8080/signup', {
+                id: id.value,
+                password: password.value,
+                name: name.value
+            });
+            //회원가입 성공
+            console.log(response.data);
+        } catch (error) {
+            //회원가입 실패
+            console.error(error);
+        }      
     }
 </script>
