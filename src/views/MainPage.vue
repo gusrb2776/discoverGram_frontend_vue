@@ -13,6 +13,8 @@
     import NavBar from '@/components/NavBar.vue';
     import BoardComponent from '@/components/BoardComponent.vue';
     import { onMounted, ref } from 'vue';
+    import axios from 'axios';
+
 
 
     // 들어오면 바로 요청보내서 데이터 받아오기
@@ -21,10 +23,8 @@
     // 이렇게 받아오면 됨.
     // onMounted(async () => {
     //     try {
-    //         // 서버에서 데이터 받아오기 (예시)
-    //         const response = await fetch('/api/posts');
-    //         const data = await response.json();
-    //         posts.value = data;
+    //         const response = await axios.get('http://localhost:8080/post/1');
+    //         posts.value = response.data;
     //     } catch (error) {
     //         console.error('Failed to fetch posts:', error);
     //     }

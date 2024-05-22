@@ -66,6 +66,8 @@
             // 로그인 성공 => memberSeq를 받아서 부모로 보내기 or Store에 저장하기
             console.log(response.data);
             const memberSeq = cookies.get('memberSeq')
+
+            console.log(memberSeq);
             authStore.setMemberSeq(memberSeq);
             // 받은 경로를 S3에서 뽑아서 그걸 저장해놓기
 

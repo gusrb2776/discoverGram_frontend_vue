@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        memberSeq: 2,
+        memberSeq: null,
         profileImgage: null,
     }),
     actions: {
