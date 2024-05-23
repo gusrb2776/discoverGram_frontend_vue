@@ -66,6 +66,7 @@
     import { useModalStore } from '@/stores/modal'
     import Carousel from '@/components/Carousel.vue'; // 캐러셀 컴포넌트 임포트
     import axios from 'axios';
+    import { useRouter } from 'vue-router';
 
     const modalStore = useModalStore()
 
@@ -161,6 +162,8 @@
         }
     }
 
+    const router = useRouter();
+
     const submit = async () => {
         try {
             const formData = new FormData();
@@ -183,9 +186,12 @@
                 }
             });
 
+            // isModalOpen.value = false;
+            // modalStore.toggleModal();
             // isWritingMode.value = false;
-            console.log(response.data);
+            // console.log(response.data);
             // toggleModal();
+            // router.go('/');
             // 성공 시 추가 작업 수행
         } catch (error) {
             console.error(error);

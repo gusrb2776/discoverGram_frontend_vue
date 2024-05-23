@@ -7,7 +7,7 @@
           class="carousel-item"
           :class="{ active: index === currentIndex }"
         >
-          <img :src="image" alt="Uploaded Image" />
+          <img :src="`https://discovergram-images.s3.ap-northeast-2.amazonaws.com/${image}`" alt="Uploaded Image" />
         </div>
       </div>
       <button class="carousel-control prev" @click="prevImage">
@@ -38,6 +38,7 @@
     },
   });
 
+  console.log(props.images)
 
   const currentIndex = ref(0);
   

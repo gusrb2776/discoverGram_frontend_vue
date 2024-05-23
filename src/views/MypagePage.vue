@@ -61,6 +61,8 @@ const memberSeq = sessionStorage.getItem("memberSeq");
 onMounted(async () => {
     await detailMember();
     await load();
+    nowPage.value++;
+
 });
 
 const member = ref({});
@@ -98,14 +100,15 @@ function toggleFollowingModal() {
     try {
         const response = await axios.get(`http://localhost:8080/post/feed/${memberSeq}?page=${nowPage.value}`);
         const data = response.data;
-        console.log(memberSeq);
+        // console.log(memberSeq);
         console.log(data);
+        posts.value.push(...data);
         if(data.length < 10){
-            posts.value.push(...data);
-           $state.complete()}
+          //  $state.complete()
+          }
         else{
-            posts.value.push(...data);
-            $state.loaded()
+            // posts.value.push(...data);
+            // $state.loaded()
             nowPage.value++;
         }
     } catch (error) {

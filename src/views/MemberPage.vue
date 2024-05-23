@@ -51,13 +51,15 @@
 </template>
 
 <script setup>
-  import { createApp, ref, defineProps, onMounted  } from 'vue'
+  import { createApp, ref, onMounted  } from 'vue'
   import NavBar from '@/components/NavBar.vue'
   import { useRoute, useRouter } from 'vue-router'
   import { useAuthStore } from '@/stores/auth'
   import axios from 'axios';
   import FollowModal from '@/components/FollowModal.vue';
   import FollowingModal from '@/components/FollowingModal.vue';
+
+  const postLen = ref('')
 
 
   // 로그인 한 사용자 꺼내기
@@ -114,9 +116,10 @@
   // 팔로우 신청
   const follow = async () => {
     try {
-      const response = await axios.post(`http://localhost:8080/${memberSeq}/${nowMemberSeq}`);
+      const response = await axios.post(`http://localhost:8080/follows/${nowMemberSeq}/${memberSeq}`);
       console.log(response.data);
       isFollow.value = true;
+      member.value.followerNumber = member.value.followerNumber + 1;
     } catch (error) {
       console.error(error);
     }     
@@ -125,9 +128,10 @@
   // 언팔로우
   const unfollow = async () => {
     try {
-      const response = await axios.delete(`http://localhost:8080/${memberSeq}/${nowMemberSeq}`);
+      const response = await axios.delete(`http://localhost:8080/followers/${nowMemberSeq}/${memberSeq}`);
       console.log(response.data);
       isFollow.value = false;
+      member.value.followerNumber = member.value.followerNumber -1;
     } catch (error) {
       console.error(error);
     }     
@@ -161,11 +165,11 @@
         const response = await axios.get(`http://localhost:8080/post/feed/${memberSeq}?page=${nowPage.value}`);
         const data = response.data;
         console.log(data);
+        posts.value.push(...data);
         if(data.length < 10) {
-          posts.value.push(...data);
           $state.complete()}
         else{
-            posts.value.push(...data);
+            // posts.value.push(...data);
             $state.loaded()
             nowPage.value++;
         }

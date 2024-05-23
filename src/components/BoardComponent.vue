@@ -22,14 +22,14 @@
                     <button @click="toggleComments"><i class="far fa-comment"></i></button>
                 </div>
                 <div class="post-likes">
-                    좋아요 {{ post.likes ? post.likes.length : 0 }}개
+                    좋아요 {{ post.likes }}개
                 </div>
                 <div class="post-content">
                     {{ post.content }}
                 </div>
                 <div class="post-comments">
-                    <div v-if="post.commentList">
-                        <div class="comment" v-for="comment in post.commentList.slice(0, 3)" :key="comment.commetSeq">
+                    <div v-if="commentList.length">
+                        <div class="comment" v-for="comment in commentList" :key="comment.commetSeq">
                             <span class="username">{{ comment.commentWriter }}</span> {{ comment.content }}
                         </div>
                     </div>
@@ -53,7 +53,9 @@
     import Carousel from '@/components/BoardImageCarousel.vue'; // 캐러셀 컴포넌트 임포트
     import CommentsPanel from '@/components/CommentPanel.vue' // 댓글 패널 컴포넌트 임포트
     import axios from 'axios'
+    import { useRouter } from 'vue-router';
 
+    const router = useRouter();
 
     const props = defineProps({
         post: Object
@@ -62,14 +64,17 @@
     // 좋아요 
     const isLike = ref(props.post.isLike);
     // isLiked = post.isLiked.value;
-
+    const memberSeq = sessionStorage.getItem('memberSeq');
     const postSeq = props.post.postSeq;
 
     const addLike = async () => {
         try {
             const response = await axios.post(`http://localhost:8080/post/${postSeq}/like`)
             // 성공적으로 좋아요를 추가했을 때 처리할 로직
+            console.log(response.data);
             isLike.value = true;
+            props.post.likes = props.post.likes+1; // 서버에서 받은 좋아요 수 업데이트
+
         } catch (error) {
             // 에러 처리 로직
             console.error(error)
@@ -82,6 +87,7 @@
             const response = await axios.delete(`http://localhost:8080/post/${postSeq}/like`)
             // 취소 완료
             isLike.value = false;
+            props.post.likes = props.post.likes -1; 
         } catch (error) {
             // 에러 처리 로직
             console.error(error)
@@ -97,15 +103,20 @@
 
     // 댓글 등록
     const comment = ref('')
+    const commentList = ref(props.post.commentList);
     
     const addComment = async () => {
         try {
             const response = await axios.post(`http://localhost:8080/post/${postSeq}/comments`, {
                 content: comment.value
             })
-            console.log(response);
+            // console.log(response.data);
+            // console.log(commentList);
+            // console.log("hi");
             // 성공적으로 댓글을 추가했을 때 처리할 로직
+            commentList.value.push(comment.value);
             comment.value = '' // 입력 필드 초기화
+            router.go(0);
         } catch (error) {
             // 에러 처리 로직
             console.error(error)

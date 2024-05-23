@@ -6,14 +6,14 @@
         <div class="follow-List" ref="followList" @scroll="handleScroll">
             <div class="follow-content">
                 <div class="follow-items" v-for="follow in follows" :key="follow.seq">
-                    <RouterLink :to="{ name: 'member', params: { memberSeq: follow.seq } }">
+                    <a @click.prevent="reload($event, follow.seq)">
                         <img class="profile-image" :src="`https://discovergram-images.s3.ap-northeast-2.amazonaws.com/${follow.userProfileImage}`" alt="">
-                    </RouterLink>
-                    <RouterLink :to="{ name: 'member', params: { memberSeq: follow.seq } }" class="name">
+                    </a>
+                    <a @click.prevent="reload($event, follow.seq)" class="name">
                         <div class="follow-name">
                             <span class="name">{{ follow.name }}</span>
                         </div>
-                    </RouterLink>
+                    </a>
                 </div>
             </div>
         </div>
@@ -25,8 +25,9 @@
 </template>
 
 <script setup>
-    import { onMounted, ref, computed } from 'vue';
+    import { onMounted, ref } from 'vue';
     import axios from 'axios';
+    import { useRouter } from 'vue-router';
 
     const {memberSeq} = defineProps({
         memberSeq: {
@@ -35,6 +36,12 @@
         }
     })
 
+    const router = useRouter();
+    const reload = (event, newMemberSeq) => {
+        event.preventDefault();
+        const newUrl = router.resolve({ name: 'member', params: { memberSeq: newMemberSeq } }).href;
+        window.location.href = newUrl;
+    }
 
     const emit = defineEmits(['close']);
     
@@ -53,12 +60,15 @@
             console.log(data);
             if(data.length < 10){
                 follows.value.push(...data);
-                $state.complete();}
+                $state.complete();
+            }
             else{
                 follows.value.push(...data);
                 $state.loaded()
                 nowPage.value++;
             }
+            console.log("hi");
+            console.log(follows.value);
         } catch (error) {
             $state.complete();
         }
