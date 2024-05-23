@@ -52,8 +52,10 @@ import FollowModal from '@/components/FollowModal.vue';
 import FollowingModal from '@/components/FollowingModal.vue';
 import { useAuthStore } from '@/stores/auth'
 
-const authStore = useAuthStore();
-const memberSeq = authStore.memberSeq;
+// const authStore = useAuthStore();
+// const memberSeq = authStore.memberSeq;
+const memberSeq = sessionStorage.getItem("memberSeq");
+// const memberProfileImage = sessionStorage.getItem('memberProfileImage');
 
 
 onMounted(async () => {
@@ -98,7 +100,9 @@ function toggleFollowingModal() {
         const data = response.data;
         console.log(memberSeq);
         console.log(data);
-        if(data.length < 10) $state.complete()
+        if(data.length < 10){
+            posts.value.push(...data);
+           $state.complete()}
         else{
             posts.value.push(...data);
             $state.loaded()

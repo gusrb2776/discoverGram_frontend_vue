@@ -74,13 +74,14 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore()
+  // const authStore = useAuthStore()
+  const isLogin = sessionStorage.getItem('isLogin');
 
   // 인증이 필요한 경로인지 확인
   const isAuthRequired = to.matched.some(route => route.meta.requiresAuth)
 
   // 인증이 필요한 경로이고, memberSeq가 없으면 /login으로 리디렉션
-  if (isAuthRequired && !authStore.memberSeq) {
+  if (isAuthRequired && !isLogin) {
     next('/login')
   } else {
     next()

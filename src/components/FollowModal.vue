@@ -5,11 +5,15 @@
         <hr>
         <div class="follow-List" ref="followList" @scroll="handleScroll">
             <div class="follow-content">
-                <div class="follow-items" v-for="follow in follows" :key="follow.id">
-                    <img class="profile-image" :src="follow.imageUrl" alt="">
-                    <div class="follow-name">
-                        <span class="name">{{ follow.name }}</span>
-                    </div>
+                <div class="follow-items" v-for="follow in follows" :key="follow.seq">
+                    <RouterLink :to="{ name: 'member', params: { memberSeq: follow.seq } }">
+                        <img class="profile-image" :src="`https://discovergram-images.s3.ap-northeast-2.amazonaws.com/${follow.userProfileImage}`" alt="">
+                    </RouterLink>
+                    <RouterLink :to="{ name: 'member', params: { memberSeq: follow.seq } }" class="name">
+                        <div class="follow-name">
+                            <span class="name">{{ follow.name }}</span>
+                        </div>
+                    </RouterLink>
                 </div>
             </div>
         </div>
@@ -24,12 +28,13 @@
     import { onMounted, ref, computed } from 'vue';
     import axios from 'axios';
 
-    defineProps({
+    const {memberSeq} = defineProps({
         memberSeq: {
         type: Number,
         required: true
         }
     })
+
 
     const emit = defineEmits(['close']);
     
@@ -44,23 +49,24 @@
 
     const load = async $state => {
         try {
-            console.log("asdfasdfdsafasdf");
-            const {data} = await axios.get(`http://localhost:8080/followers/${props.memberSeq}?page=${nowPage.value}`);
-            
+            const {data} = await axios.get(`http://localhost:8080/followers/${memberSeq}?page=${nowPage.value}`);
             console.log(data);
-            if(data.length < 10) $state.complete();
+            if(data.length < 10){
+                follows.value.push(...data);
+                $state.complete();}
             else{
                 follows.value.push(...data);
                 $state.loaded()
                 nowPage.value++;
             }
         } catch (error) {
-            console.log("씨빨")
-            // $state.complete();
+            $state.complete();
         }
     };
     onMounted(() => {
         load();
+        nowPage.value++;
+        console.log(memberSeq);
     });
 
 </script>

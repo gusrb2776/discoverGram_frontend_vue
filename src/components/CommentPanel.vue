@@ -28,8 +28,10 @@
     import axios from 'axios';
     import { useAuthStore } from '@/stores/auth';
 
-    const authStore = useAuthStore();
-    const memberSeq = authStore.memberSeq;
+    // const authStore = useAuthStore();
+    // const memberSeq = authStore.memberSeq;
+    const memberSeq = sessionStorage.getItem("memberSeq");
+    const profileImgage = sessionStorage.getItem('memberProfileImage');
 
     const props = defineProps({
         showComments: Boolean,

@@ -61,8 +61,10 @@
 
 
   // 로그인 한 사용자 꺼내기
-  const authStore = useAuthStore()
-  const nowMemberSeq = authStore.memberSeq;
+  // const authStore = useAuthStore()
+  // const nowMemberSeq = authStore.memberSeq;
+  const nowMemberSeq = sessionStorage.getItem("memberSeq");
+  // const profileImgage = sessionStorage.getItem('memberProfileImage');
 
   const route = useRoute()
   const router = useRouter()
@@ -77,7 +79,8 @@
   onMounted(async () => {
     await detailMember();
     await checkFollow();
-    // await load();
+    await load();
+    nowPage.value++;
   });
 
   // 현재 페이지 주인의 정보 꺼내기
@@ -100,6 +103,8 @@
     try {
       const response = await axios.get(`http://localhost:8080/follows/${nowMemberSeq}/${memberSeq}`);
       isFollow.value = response.data;
+      console.log(response.data);
+      console.log("머임")
     } catch (error) {
       console.error('Failed to fetch comments:', error);
     }
@@ -156,7 +161,9 @@
         const response = await axios.get(`http://localhost:8080/post/feed/${memberSeq}?page=${nowPage.value}`);
         const data = response.data;
         console.log(data);
-        if(data.length < 10) $state.complete()
+        if(data.length < 10) {
+          posts.value.push(...data);
+          $state.complete()}
         else{
             posts.value.push(...data);
             $state.loaded()

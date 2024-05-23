@@ -68,6 +68,9 @@
             const memberProfileImage = response.headers['userprofileimage']; // 헤더 키는 대소문자 구분하지 않음
             // console.log('memberSeq:', memberSeq);
             // console.log(memberProfileImage);
+            sessionStorage.setItem('isLogin', true);
+            sessionStorage.setItem('memberSeq', memberSeq);
+            sessionStorage.setItem('memberProfileImage', memberProfileImage);
 
             authStore.setMemberSeq(memberSeq);
             authStore.setProfileImgage(memberProfileImage);

@@ -29,8 +29,8 @@
                 </div>
                 <div class="post-comments">
                     <div v-if="post.commentList">
-                        <div class="comment" v-for="comment in post.commentList.slice(0, 3)" :key="comment.Seq">
-                            <span class="username">{{ comment.name }}</span> {{ comment.content }}
+                        <div class="comment" v-for="comment in post.commentList.slice(0, 3)" :key="comment.commetSeq">
+                            <span class="username">{{ comment.commentWriter }}</span> {{ comment.content }}
                         </div>
                     </div>
                     <div v-else style="font-weight: 600; margin-bottom: 10px;">

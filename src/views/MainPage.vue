@@ -20,8 +20,10 @@
     import axios from 'axios';
     import { useAuthStore } from '@/stores/auth';
 
-    const authStore = useAuthStore();
-    const memberSeq = authStore.memberSeq;
+    // const authStore = useAuthStore();
+    // const memberSeq = authStore.memberSeq;
+    const memberSeq = sessionStorage.getItem("memberSeq");
+    const memberProfileImage = sessionStorage.getItem('memberProfileImage');
 
     import InfiniteLoading from "v3-infinite-loading";
 
@@ -33,7 +35,9 @@
             const {data} = await axios.get(`http://localhost:8080/post/newsfeed/${memberSeq}?page=${nowPage.value}`);
             
             console.log(data);
-            if(data.length < 10) $state.complete()
+            if(data.length < 10) {
+                posts.value.push(...data);
+                $state.complete()}
             else{
                 posts.value.push(...data);
                 $state.loaded()
@@ -45,6 +49,7 @@
     };
     onMounted(() => {
         load();
+        nowPage.value++;
     });
 </script>
 

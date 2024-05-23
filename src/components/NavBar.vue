@@ -12,17 +12,22 @@
     }
 
     //로그인 정보 참조
-    const authStore = useAuthStore()
-    const memberSeq = authStore.memberSeq;
-    const profileImgage = authStore.profileImgage;
+    // const authStore = useAuthStore()
+    // const memberSeq = authStore.memberSeq;
+    // const profileImgage = authStore.profileImgage;
+    const memberSeq = sessionStorage.getItem("memberSeq");
+    const profileImgage = sessionStorage.getItem('memberProfileImage');
 
 
     //로그아웃
     const router = useRouter();
 
     const logout = () =>{
-        authStore.setMemberSeq(null);
-        authStore.setProfileImgage(null);
+        // authStore.setMemberSeq(null);
+        // authStore.setProfileImgage(null);
+        sessionStorage.setItem('isLogin',false);
+        sessionStorage.setItem('memberSeq',null);
+        sessionStorage.setItem('memberProfileImage',null);
         router.push('/login');
     }
 </script>
@@ -61,7 +66,7 @@
                 <!-- 프로필 이미지 -->
                 <li>
                     <RouterLink to="/mypage">
-                        <img :src="profileImgage" alt="Profile Picture">
+                        <img :src="`https://discovergram-images.s3.ap-northeast-2.amazonaws.com/${profileImgage}`" alt="Profile Picture">
                     </RouterLink>
                 </li>
                 <!-- 로그아웃 -->
