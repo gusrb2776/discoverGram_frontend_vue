@@ -16,8 +16,53 @@
             </div>
             <div v-if="isLoading" class="loading-spinner">Loading...</div>
         </div>
+        <infinite-loading @infinite="load" style="visibility: hidden"></infinite-loading>
     </div>
+
+
 </template>
+
+
+<script setup>
+    import { onMounted, ref, computed } from 'vue';
+    import axios from 'axios';
+    import { useAuthStore } from '@/stores/auth';
+
+    const authStore = useAuthStore();
+    const memberSeq = authStore.memberSeq;
+
+    const props = defineProps({
+        showComments: Boolean,
+        postSeq: Number
+    })
+
+    const emit = defineEmits(['closePanel'])
+    
+    import InfiniteLoading from "v3-infinite-loading";
+    
+    const comments = ref([]);
+    const nowPage = ref(0);
+
+    const load = async $state => {
+        try {
+            const {data} = await axios.get(`http://localhost:8080/post/${props.postSeq}/comments?page=${nowPage.value}`);
+            
+            console.log(data);
+            if(data.length < 10) $state.complete()
+            else{
+                comments.value.push(...data);
+                $state.loaded()
+                nowPage.value++;
+            }
+        } catch (error) {
+            $state.complete();
+        }
+    };
+    onMounted(() => {
+        load();
+    });
+</script>
+
 
 <style scoped>
 .comments-panel{
@@ -54,92 +99,3 @@
     margin-bottom: 5px;
 }
 </style>
-
-<script setup>
-    import { onMounted, ref, computed } from 'vue';
-    import axios from 'axios';
-
-    const props = defineProps({
-        showComments: Boolean,
-        postSeq: Number
-    })
-
-    const emit = defineEmits(['closePanel'])
-    const comments = ref([]);
-    const totalComments = ref(0);
-    const batchSize = 10; // 한 번에 로드할 댓글 수
-    const currentBatch = ref(0);
-    const isLoading = ref(false);
-
-    const displayedComments = computed(() => {
-        return comments.value.slice(0, (currentBatch.value + 1) * batchSize);
-    });
-
-    onMounted(async () => {
-        await fetchComments();
-    });
-
-    const fetchComments = async () => {
-        try {
-            isLoading.value = true;
-            const response = await axios.get(`http://localhost:8080/${props.postSeq}/comments?page=${currentBatch.value * batchSize}&size=${batchSize}`);
-            // 아래에 코드는 수정 필요
-            comments.value = [...comments.value, ...response.data.comments];
-            totalComments.value = response.data.total;
-            currentBatch.value++;
-        } catch (error) {
-            console.error('Failed to fetch comments:', error);
-        } finally {
-            isLoading.value = false;
-        }
-    };
-
-    const handleScroll = () => {
-        const commentsListElement = document.querySelector('.comments-list');
-        if (commentsListElement && !isLoading.value && commentsListElement.scrollHeight - commentsListElement.scrollTop === commentsListElement.clientHeight) {
-            if (comments.value.length < totalComments.value) {
-                fetchComments();
-            }
-        }
-    };
-
-    const dummyData = [
-        {
-            name : "이름",
-            comments : "댓글"
-        },
-        {
-            name : "이름",
-            comments : "댓글"
-        },
-        {
-            name : "이름",
-            comments : "댓글"
-        },
-        {
-            name : "이름",
-            comments : "댓글"
-        },
-        {
-            name : "이름",
-            comments : "댓글"
-        },
-        {
-            name : "이름",
-            comments : "댓글"
-        },
-        {
-            name : "이름",
-            comments : "댓글"
-        },
-        {
-            name : "이름",
-            comments : "댓글"
-        },
-        {
-            name : "이름",
-            comments : "댓글"
-        },
-    ]
-    comments.value = dummyData;
-</script>

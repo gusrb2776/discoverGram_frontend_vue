@@ -61,7 +61,7 @@
                 <!-- 프로필 이미지 -->
                 <li>
                     <RouterLink to="/mypage">
-                        <img src="/img/a.jpg" alt="Profile Picture">
+                        <img :src="profileImgage" alt="Profile Picture">
                     </RouterLink>
                 </li>
                 <!-- 로그아웃 -->
@@ -71,11 +71,11 @@
                     </div>
                 </li>
                 <!-- 테스트용 -->
-                <li>
+                <!-- <li>
                     <RouterLink to="/test">
                         테스트용
                     </RouterLink>
-                </li>
+                </li> -->
             </ul>
         </div>
         </div>

@@ -3,10 +3,14 @@
         <NavBar/>
         <div class="wrapper">
             <div class="board-container">
-                <BoardComponent v-for="post in posts" :key="post.seq" :post="post" class="board-item" />
+                <BoardComponent v-for="post in posts" :key="post.postSeq" :post="post" class="board-item" />
             </div>
         </div>
+        <infinite-loading @infinite="load" style="visibility: hidden"></infinite-loading>
+
     </div>
+
+    <!-- <infinite-loading @infinite="load" style="display: none"></infinite-loading> -->
 </template>
 
 <script setup>
@@ -14,83 +18,34 @@
     import BoardComponent from '@/components/BoardComponent.vue';
     import { onMounted, ref } from 'vue';
     import axios from 'axios';
+    import { useAuthStore } from '@/stores/auth';
 
+    const authStore = useAuthStore();
+    const memberSeq = authStore.memberSeq;
 
+    import InfiniteLoading from "v3-infinite-loading";
 
-    // 들어오면 바로 요청보내서 데이터 받아오기
+    const nowPage = ref(0);
     const posts = ref([]);
 
-    // 이렇게 받아오면 됨.
-    // onMounted(async () => {
-    //     try {
-    //         const response = await axios.get('http://localhost:8080/post/1');
-    //         posts.value = response.data;
-    //     } catch (error) {
-    //         console.error('Failed to fetch posts:', error);
-    //     }
-    // });
-
-    const dummyData = [
-        {
-            seq: 1,
-            memberSeq:1,
-            memberProfileUrl: '/img/a.jpg',
-            memberName: '닉네임',
-            placeName: '위치',
-            content: '글내용입니다.',
-            images: [
-                '/img/nongdamgom.jpg',
-                '/img/nongdamgom2.jpg',
-                '/img/nongdamgom.jpg'
-            ],
-            likes: 31,
-            comments: [
-                { id: 1, name: '댓글1', content: '좋아요!' },
-                { id: 2, name: '댓글2', content: '멋져요!' },
-                { id: 3, name: '댓글3', content: '인생샷!' }
-            ]
-        },
-        {
-            seq: 2,
-            memberSeq:1,
-            memberProfileUrl: '/img/a.jpg',
-            memberName: '닉네임2',
-            placeName: '위치',
-            content: '글내용입니다.',
-            images: [
-                '/img/nongdamgom.jpg',
-                '/img/nongdamgom2.jpg',
-                '/img/nongdamgom.jpg'
-            ],
-            likes: 5,
-            comments: [
-                { id: 1, name: '댓글1', content: '좋아요!' },
-                { id: 2, name: '댓글2', content: '멋져요!' },
-                { id: 3, name: '댓글3', content: '인생샷!' }
-            ]
-        },
-        {
-            seq: 3,
-            memberSeq:1,
-            memberProfileUrl: '/img/a.jpg',
-            memberName: '닉네임3',
-            placeName: '위치',
-            content: '글내용입니다.',
-            images: [
-                '/img/nongdamgom.jpg',
-                '/img/nongdamgom2.jpg',
-                '/img/nongdamgom.jpg'
-            ],
-            likes: 6,
-            comments: [
-                { id: 1, name: '댓글1', content: '좋아요!' },
-                { id: 2, name: '댓글2', content: '멋져요!' },
-                { id: 3, name: '댓글3', content: '인생샷!' }
-            ]
-        },
-    ];
-
-    posts.value = dummyData;
+    const load = async $state => {
+        try {
+            const {data} = await axios.get(`http://localhost:8080/post/newsfeed/${memberSeq}?page=${nowPage.value}`);
+            
+            console.log(data);
+            if(data.length < 10) $state.complete()
+            else{
+                posts.value.push(...data);
+                $state.loaded()
+                nowPage.value++;
+            }
+        } catch (error) {
+            $state.complete();
+        }
+    };
+    onMounted(() => {
+        load();
+    });
 </script>
 
 <style scoped>

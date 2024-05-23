@@ -12,31 +12,19 @@
   import { useRoute } from 'vue-router'
   import NavBar from '@/components/NavBar.vue'
   import PostComponent from '@/components/PostComponent.vue'
+  import { useAuthStore } from '@/stores/auth'
+  import axios from 'axios';
 
   
   const route = useRoute()
-  // {{ postSeq }} 이런식으로 쓰면 됨.
-  // 주소창에 있는 postId임.
+
+  // const authStore = useAuthStore()
+  // const memberSeq = authStore.memberSeq;
+
   const postSeq = route.params.postSeq
 
-  const postData = {
-        memberSeq: 1,
-        memberProfileUrl: '/img/a.jpg',
-        memberName: '닉네임',
-        placeName: '위치',
-        content: '글내용입니다.',
-        images: [
-            '/img/nongdamgom.jpg',
-            '/img/nongdamgom2.jpg',
-            '/img/nongdamgom.jpg'
-        ],
-        likes: 100,
-        comments: [
-            { id: 1, name: '댓글1', content: '좋아요!' },
-            { id: 2, name: '댓글2', content: '멋져요!' },
-            { id: 3, name: '댓글3', content: '인생샷!' }
-        ]
-    }
+
+  // 팔로우 하냐
 </script>
 
 <style scoped>

@@ -10,7 +10,8 @@ export const useAuthStore = defineStore('auth', {
             this.memberSeq = seq
         },
         setProfileImgage(profileImgage){
-            this.profileImgage = profileImgage
+            this.profileImgage = "https://discovergram-images.s3.ap-northeast-2.amazonaws.com/" + profileImgage
+            console.log(profileImgage);
         }
     }
 })

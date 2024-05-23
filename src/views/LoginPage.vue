@@ -30,7 +30,6 @@
     import axios from 'axios';
     import { useAuthStore } from '@/stores/auth'
     import { useRouter } from 'vue-router'
-    import { useCookies } from 'vue-cookies'
 
 
     const loginTitle = ref(null);
@@ -47,15 +46,16 @@
     };
 
 
-    // 쿠키에서 꺼낼라고 들고옴
+    // // 쿠키에서 꺼낼라고 들고옴
     // const { cookies } = useCookies()
 
 
     // 로그인
 
-    const id = ref('')
-    const password = ref('')
+    const id = ref('a')
+    const password = ref('a')
     const authStore = useAuthStore()
+    const router = useRouter()
 
     const login = async () => {
         try {
@@ -64,14 +64,15 @@
                 password: password.value
             });
             // 로그인 성공 => memberSeq를 받아서 부모로 보내기 or Store에 저장하기
-            console.log(response.data);
-            const memberSeq = cookies.get('memberSeq')
+            const memberSeq = response.headers['memberseq']; // 헤더 키는 대소문자 구분하지 않음
+            const memberProfileImage = response.headers['userprofileimage']; // 헤더 키는 대소문자 구분하지 않음
+            // console.log('memberSeq:', memberSeq);
+            // console.log(memberProfileImage);
 
-            console.log(memberSeq);
             authStore.setMemberSeq(memberSeq);
-            // 받은 경로를 S3에서 뽑아서 그걸 저장해놓기
+            authStore.setProfileImgage(memberProfileImage);
 
-            router.push('/main')
+            router.push('/')
         } catch (error) {
             // 로그인 실패 시 처리할 로직 추가
             console.error(error);

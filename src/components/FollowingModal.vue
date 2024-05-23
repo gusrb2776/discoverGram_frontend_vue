@@ -15,61 +15,52 @@
       </div>
       <span class="close-btn" @click="closeModal">&times;</span>
     </div>
+    <infinite-loading @infinite="load" style="visibility: hidden"></infinite-loading>
   </div>
 </template>
 
 <script setup>
   import { onMounted, ref, computed } from 'vue';
   import axios from 'axios';
+
+  defineProps({
+    memberSeq: {
+      type: Number,
+      required: true
+    }
+  })
+
   const emit = defineEmits(['close']);
   
   function closeModal() {
       emit('close');
   }
-  // 더미데이터임
-  const follows = ref([
-      { id: 1, name: '사용자 1', imageUrl: '/img/a.jpg' },
-      { id: 2, name: '사용자 2', imageUrl: '/img/b.jpg' },
-      { id: 1, name: '사용자 1', imageUrl: '/img/a.jpg' },
-      { id: 2, name: '사용자 2', imageUrl: '/img/b.jpg' },
-      { id: 1, name: '사용자 1', imageUrl: '/img/a.jpg' },
-      { id: 2, name: '사용자 2', imageUrl: '/img/b.jpg' },
-      { id: 1, name: '사용자 1', imageUrl: '/img/a.jpg' },
-      { id: 2, name: '사용자 2', imageUrl: '/img/b.jpg' },
-  ]);
 
-  // 리스트 가져오기
-  // const follows = ref([]);
-  // const followList = ref(null);
-  // const memberSeq = 123; // 여기에 실제 memberSeq 값을 할당해야 합니다.
-  // let page = 1;
-  // const limit = 10; // 한 번에 가져올 팔로워 수
+  import InfiniteLoading from "v3-infinite-loading";
+    
+    const follows = ref([]);
+    const nowPage = ref(0);
 
+    const load = async $state => {
+        try {
+            console.log("안농");
+            const {data} = await axios.get(`http://localhost:8080/followings/${props.memberSeq}?page=${nowPage.value}`);
+            
+            console.log(data);
+            if(data.length < 10) $state.complete()
+            else{
+                follows.value.push(...data);
+                $state.loaded()
+                nowPage.value++;
+            }
+        } catch (error) {
+            $state.complete();
+        }
+    };
+    onMounted(() => {
+        load();
+    });
 
-  // function handleScroll() {
-  //     const scrollHeight = followList.value.scrollHeight;
-  //     const scrollTop = followList.value.scrollTop;
-  //     const clientHeight = followList.value.clientHeight;
-
-  //     if (scrollTop + clientHeight >= scrollHeight) {
-  //         fetchFollowers();
-  //     }
-  // }
-
-  // function fetchFollowers() {
-  //     axios.get(`http://localhost:8080/${memberSeq}?page=${page}&limit=${limit}`)
-  //         .then(response => {
-  //             follows.value = [...follows.value, ...response.data];
-  //             page++;
-  //         })
-  //         .catch(error => {
-  //             console.error('Failed to fetch followers:', error);
-  //         });
-  // }
-
-  // onMounted(() => {
-  //     fetchFollowers();
-  // });
 </script>
 
 <style scoped>
